@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image change size</title>
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+</head>
+<body>
+ <h2>Форма ввода данных для изображений</h2>
+    <form action="/" enctype="multipart/form-data" method="post">
+        <p>
+            Масштаб <br>
+            <input name="scale" type="range" id="scale" value="1" min="1" max="3" oninput="scale_vis.value=scale.value" />
+            <output name="scale_vis" for="scale"> 1 </output>
+        </p>
+        <input name="files" type="file" multiple>
+        <p>
+            <input type="submit" value="Send" />
+        </p>
+    </form>
+    {% if ready %}
+    <table>
+        {% for item in request_result %}
+        {% if not item["valid_image"] %}
+            <tr><td colspan="2">{{item["filename"]}} Not an image!</td></tr>
+        {% else %}
+            <tr><td colspan="2">File name: {{item["filename"]}}</td></tr>
+            <tr><td colspan="2">Source image an histogram</td></tr>
+            <tr>
+                <td><img src = 'data:image/jpg;base64, {{ item["source_image"] }}'/></td>
+                <td><img src = 'data:image/jpg;base64, {{ item["source_hist"] }}'/></td>
+            </tr>
+        <tr><td colspan="2">Scaled image an histogram</td></tr>
+            <tr>
+                <td><img src = 'data:image/jpg;base64, {{ item["scaled_image"] }}'/></td>
+                <td><img src = 'data:image/jpg;base64, {{ item["scaled_hist"] }}'/></td>
+            </tr>
+        {% endif %}
+        {% endfor %}
+    </table>
+    {% endif %}
+</body>
+</html>
